@@ -6,6 +6,12 @@
 package Presentacion;
 
 import java.awt.Color;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -17,15 +23,48 @@ public class Formulario extends javax.swing.JFrame {
      * Creates new form Formulario
      */
     
-    
+    private DatagramSocket cliente;
     
        private void cerrarDialogs() {
-        this.jDialog_Bici.setVisible(false);
         this.jDialog_Transfers.setVisible(false);
+        this.jDialog_Bici.setVisible(false);
     }
     
+       
+     public void esperarPaquetes()
+    {
+        while ( true )
+            { 
+                try {
+     
+                        byte datos[] = new byte[ 1000 ];
+                        DatagramPacket recibirPaquete = new DatagramPacket(datos, datos.length );
+                        cliente.receive( recibirPaquete ); 
+                        System.out.print( "\nPaquete recibido:" + 
+                        "\nDel host: " + recibirPaquete.getAddress() + 
+                        "\nPuerto del host: " + recibirPaquete.getPort() + 
+                        "\nLongitud: " + recibirPaquete.getLength() + 
+                        "\nContenido:\n\t" + new String( recibirPaquete.getData(),0, recibirPaquete.getLength() ) );
+                      }
+ 
+                        catch( IOException errorio )
+                            {
+                                System.out.print( errorio.toString() + "\n" ); 
+                            }
+               } 
+       }   
+       
     public Formulario() {
         initComponents();
+        
+         try {
+                cliente = new DatagramSocket();
+            }
+            catch( SocketException excepcionSocket )
+            {
+                JOptionPane.showMessageDialog( null, "Error en el Socket"+excepcionSocket,"Información", JOptionPane.PLAIN_MESSAGE );
+                    System.exit( 1 );
+            }
     }
 
     /**
@@ -37,7 +76,7 @@ public class Formulario extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jDialog_Bici = new javax.swing.JDialog();
+        jDialog_Transfers = new javax.swing.JDialog();
         jLabel44 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         txtTelefonoTransfer = new javax.swing.JTextField();
@@ -56,7 +95,7 @@ public class Formulario extends javax.swing.JFrame {
         btnReservarTransfer = new javax.swing.JButton();
         jLabel47 = new javax.swing.JLabel();
         cmbNombreRutaReservaTransfer = new javax.swing.JComboBox();
-        jDialog_Transfers = new javax.swing.JDialog();
+        jDialog_Bici = new javax.swing.JDialog();
         jPanel3 = new javax.swing.JPanel();
         jLabel30 = new javax.swing.JLabel();
         jLabel31 = new javax.swing.JLabel();
@@ -92,8 +131,8 @@ public class Formulario extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
 
-        jDialog_Bici.setMinimumSize(new java.awt.Dimension(670, 470));
-        jDialog_Bici.setResizable(false);
+        jDialog_Transfers.setMinimumSize(new java.awt.Dimension(670, 470));
+        jDialog_Transfers.setResizable(false);
 
         jLabel44.setText("Reserva de Transfer");
 
@@ -118,27 +157,23 @@ public class Formulario extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel46, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap(197, Short.MAX_VALUE))
+                        .addComponent(jLabel46, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel38)
-                                        .addComponent(jLabel39)
-                                        .addComponent(jLabel42)
-                                        .addComponent(jLabel43)
-                                        .addComponent(jLabel45))
-                                    .addGap(47, 47, 47)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(txtCedulaClienteTransfer)
-                                        .addComponent(txtNombreClienteTransfer)
-                                        .addComponent(txtDireccionTransfer)
-                                        .addComponent(txtTelefonoTransfer)
-                                        .addComponent(txtCorreoClienteTransfer, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                .addComponent(jLabel38)
+                                .addComponent(jLabel39)
+                                .addComponent(jLabel42)
+                                .addComponent(jLabel43)
+                                .addComponent(jLabel45))
+                            .addGap(47, 47, 47)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(txtCedulaClienteTransfer)
+                                .addComponent(txtNombreClienteTransfer)
+                                .addComponent(txtDireccionTransfer)
+                                .addComponent(txtTelefonoTransfer)
+                                .addComponent(txtCorreoClienteTransfer, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -212,36 +247,36 @@ public class Formulario extends javax.swing.JFrame {
                 .addGap(60, 60, 60))
         );
 
-        javax.swing.GroupLayout jDialog_BiciLayout = new javax.swing.GroupLayout(jDialog_Bici.getContentPane());
-        jDialog_Bici.getContentPane().setLayout(jDialog_BiciLayout);
-        jDialog_BiciLayout.setHorizontalGroup(
-            jDialog_BiciLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jDialog_BiciLayout.createSequentialGroup()
+        javax.swing.GroupLayout jDialog_TransfersLayout = new javax.swing.GroupLayout(jDialog_Transfers.getContentPane());
+        jDialog_Transfers.getContentPane().setLayout(jDialog_TransfersLayout);
+        jDialog_TransfersLayout.setHorizontalGroup(
+            jDialog_TransfersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog_TransfersLayout.createSequentialGroup()
                 .addGap(70, 70, 70)
-                .addGroup(jDialog_BiciLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jDialog_TransfersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel44)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(45, Short.MAX_VALUE))
         );
-        jDialog_BiciLayout.setVerticalGroup(
-            jDialog_BiciLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jDialog_BiciLayout.createSequentialGroup()
+        jDialog_TransfersLayout.setVerticalGroup(
+            jDialog_TransfersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog_TransfersLayout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addComponent(jLabel44)
                 .addGap(44, 44, 44)
-                .addGroup(jDialog_BiciLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jDialog_BiciLayout.createSequentialGroup()
+                .addGroup(jDialog_TransfersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jDialog_TransfersLayout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(27, 27, 27))
-                    .addGroup(jDialog_BiciLayout.createSequentialGroup()
+                    .addGroup(jDialog_TransfersLayout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())))
         );
 
-        jDialog_Transfers.setMinimumSize(new java.awt.Dimension(660, 470));
-        jDialog_Transfers.setResizable(false);
+        jDialog_Bici.setMinimumSize(new java.awt.Dimension(660, 470));
+        jDialog_Bici.setResizable(false);
 
         jLabel30.setText("Cedula:");
 
@@ -360,28 +395,28 @@ public class Formulario extends javax.swing.JFrame {
 
         jLabel28.setText("Reserva de bici-ágil");
 
-        javax.swing.GroupLayout jDialog_TransfersLayout = new javax.swing.GroupLayout(jDialog_Transfers.getContentPane());
-        jDialog_Transfers.getContentPane().setLayout(jDialog_TransfersLayout);
-        jDialog_TransfersLayout.setHorizontalGroup(
-            jDialog_TransfersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jDialog_TransfersLayout.createSequentialGroup()
+        javax.swing.GroupLayout jDialog_BiciLayout = new javax.swing.GroupLayout(jDialog_Bici.getContentPane());
+        jDialog_Bici.getContentPane().setLayout(jDialog_BiciLayout);
+        jDialog_BiciLayout.setHorizontalGroup(
+            jDialog_BiciLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog_BiciLayout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(65, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDialog_TransfersLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDialog_BiciLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel28)
                 .addGap(255, 255, 255))
         );
-        jDialog_TransfersLayout.setVerticalGroup(
-            jDialog_TransfersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jDialog_TransfersLayout.createSequentialGroup()
+        jDialog_BiciLayout.setVerticalGroup(
+            jDialog_BiciLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog_BiciLayout.createSequentialGroup()
                 .addContainerGap(28, Short.MAX_VALUE)
                 .addComponent(jLabel28)
                 .addGap(18, 18, 18)
-                .addGroup(jDialog_TransfersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jDialog_BiciLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(19, 19, 19))
@@ -600,8 +635,29 @@ public class Formulario extends javax.swing.JFrame {
 
     private void panel_transfersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_transfersMouseClicked
         cerrarDialogs();
-        this.jDialog_Transfers.setVisible(true);
-        jDialog_Transfers.setLocationRelativeTo(null);
+        this.jDialog_Bici.setVisible(true);
+        jDialog_Bici.setLocationRelativeTo(null);
+        
+        
+         try
+         {    
+          String mensaje1 = "SELECT NOMBRE FROM RUTA";
+
+       
+            byte datos1[] = mensaje1.getBytes();
+ 
+
+            DatagramPacket enviarPaquete1 = new DatagramPacket( datos1,datos1.length,
+                InetAddress.getByName( "192.168.0.12" )/*.getLocalHost()*/, 5000 ); //MODIFICAR CON LA IP DEL SERVIDOR
+            cliente.send( enviarPaquete1 );
+            System.out.printf("\nPaquete enviado\n" );
+            //pantallacliente.setCaretPosition(pantallacliente.getText().length() )  
+            
+             }
+        catch ( IOException errorio )
+        {
+            System.out.printf( errorio.toString() + "\n" );
+        }
     }//GEN-LAST:event_panel_transfersMouseClicked
 
     private void panel_transfersMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_transfersMouseEntered
@@ -614,8 +670,29 @@ public class Formulario extends javax.swing.JFrame {
 
     private void panel_biciagilMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_biciagilMouseClicked
         cerrarDialogs();
-        this.jDialog_Bici.setVisible(true);
-        jDialog_Bici.setLocationRelativeTo(null); //Ubica ventana en la mitad de la pantalla
+        this.jDialog_Transfers.setVisible(true);
+        jDialog_Transfers.setLocationRelativeTo(null); //Ubica ventana en la mitad de la pantalla
+        
+        
+        try
+         {    
+          String mensaje1 = "SELECT NOMBRE FROM ESTACION";
+
+       
+            byte datos1[] = mensaje1.getBytes();
+ 
+
+            DatagramPacket enviarPaquete1 = new DatagramPacket( datos1,datos1.length,
+                InetAddress.getByName( "192.168.0.12" )/*.getLocalHost()*/, 5000 ); //MODIFICAR CON LA IP DEL SERVIDOR
+            cliente.send( enviarPaquete1 );
+            System.out.printf("\nPaquete enviado\n" );
+            //pantallacliente.setCaretPosition(pantallacliente.getText().length() )  
+            
+             }
+        catch ( IOException errorio )
+        {
+            System.out.printf( errorio.toString() + "\n" );
+        }
     }//GEN-LAST:event_panel_biciagilMouseClicked
 
     private void panel_biciagilMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_biciagilMouseEntered
@@ -628,10 +705,146 @@ public class Formulario extends javax.swing.JFrame {
 
     private void btnReservarBicicletaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarBicicletaActionPerformed
         // TODO add your handling code here:
+        
+        
+               
+        
+        
+         try
+        {
+           
+            String mensaje1 = "INSERT INTO USUARIO VALUES("+this.txtCedulaClienteBicicleta.getText()
+                    +",'"+this.txtNombreClienteBicicleta.getText()
+                    +"','"+this.txtDireccionClienteBicicleta.getText()
+                    +"','"+this.txtTelefonoClienteBicicleta.getText()+"','"
+                    +this.txtCorreoClienteBicicleta.getText()+"','Reserva')";
+
+       
+            byte datos1[] = mensaje1.getBytes();
+ 
+
+            DatagramPacket enviarPaquete1 = new DatagramPacket( datos1,datos1.length,
+                InetAddress.getByName( "192.168.0.12" )/*.getLocalHost()*/, 5000 ); //MODIFICAR CON LA IP DEL SERVIDOR
+            cliente.send( enviarPaquete1 );
+            System.out.printf("\nPaquete enviado\n" );
+            //pantallacliente.setCaretPosition(pantallacliente.getText().length() )   
+            
+            
+            
+
+                
+          String mensaje3 = "SELECT b.BICICLETA_ID FROM BICICLETA b, ESTACION e WHERE b.ESTADO= 'Libre' AND b.BICICLETA_ID= e.BICICLETA_ID AND e.NOMBRE = '"+this.cmbNombreEstacionReservaBici.getSelectedItem()+"'";
+
+       
+            byte datos3[] = mensaje3.getBytes();
+ 
+
+            DatagramPacket enviarPaquete3 = new DatagramPacket( datos3,datos3.length,
+                InetAddress.getByName( "192.168.0.12" )/*.getLocalHost()*/, 5000 ); //MODIFICAR CON LA IP DEL SERVIDOR
+            cliente.send( enviarPaquete3 );
+            System.out.printf("\nPaquete enviado\n" );
+            //pantallacliente.setCaretPosition(pantallacliente.getText().length() )  
+            
+            
+            
+            
+            String mensaje4 = "INSERT INTO TRANSFER_CONDUCTOR VALUES()";
+
+       
+            byte datos4[] = mensaje4.getBytes();
+ 
+
+            DatagramPacket enviarPaquete4 = new DatagramPacket( datos4,datos4.length,
+                InetAddress.getByName( "192.168.0.12" )/*.getLocalHost()*/, 5000 ); //MODIFICAR CON LA IP DEL SERVIDOR
+            cliente.send( enviarPaquete4 );
+            System.out.printf("\nPaquete enviado\n" );
+            //pantallacliente.setCaretPosition(pantallacliente.getText().length() )  
+
+        }
+        catch ( IOException errorio )
+        {
+            System.out.printf( errorio.toString() + "\n" );
+        }
     }//GEN-LAST:event_btnReservarBicicletaActionPerformed
 
     private void btnReservarTransferActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarTransferActionPerformed
         // TODO add your handling code here:
+        
+        
+        
+        
+         try
+        {
+           
+            String mensaje1 = "INSERT INTO USUARIO VALUES("+this.txtCedulaClienteTransfer.getText()
+                    +",'"+this.txtNombreClienteTransfer.getText()
+                    +"','"+this.txtDireccionTransfer.getText()+"','"+this.txtTelefonoTransfer.getText()+"','"
+                    +this.txtCorreoClienteTransfer.getText()+"','Reserva')";
+
+       
+            byte datos1[] = mensaje1.getBytes();
+ 
+
+            DatagramPacket enviarPaquete1 = new DatagramPacket( datos1,datos1.length,
+                InetAddress.getByName( "192.168.0.12" )/*.getLocalHost()*/, 5000 ); //MODIFICAR CON LA IP DEL SERVIDOR
+            cliente.send( enviarPaquete1 );
+            System.out.printf("\nPaquete enviado\n" );
+            //pantallacliente.setCaretPosition(pantallacliente.getText().length() )   
+            
+            
+            
+            
+          String mensaje2 = "SELECT CONDUCTOR_ID FROM CONDUCTOR WHERE ESTADO = 'Libre'";
+
+       
+            byte datos2[] = mensaje2.getBytes();
+ 
+
+            DatagramPacket enviarPaquete2 = new DatagramPacket( datos2,datos2.length,
+                InetAddress.getByName( "192.168.0.12" )/*.getLocalHost()*/, 5000 ); //MODIFICAR CON LA IP DEL SERVIDOR
+            cliente.send( enviarPaquete2 );
+            System.out.printf("\nPaquete enviado\n" );
+            //pantallacliente.setCaretPosition(pantallacliente.getText().length() )   
+            
+            
+           
+                
+          String mensaje3 = "SELECT TRANSFER_ID FROM TRANSFER WHERE ESTADO = 'Libre'";
+
+       
+            byte datos3[] = mensaje3.getBytes();
+ 
+
+            DatagramPacket enviarPaquete3 = new DatagramPacket( datos3,datos3.length,
+                InetAddress.getByName( "192.168.0.12" )/*.getLocalHost()*/, 5000 ); //MODIFICAR CON LA IP DEL SERVIDOR
+            cliente.send( enviarPaquete3 );
+            System.out.printf("\nPaquete enviado\n" );
+            //pantallacliente.setCaretPosition(pantallacliente.getText().length() )  
+            
+            
+            
+            
+            String mensaje4 = "INSERT INTO TRANSFER_CONDUCTOR VALUES()";
+
+       
+            byte datos4[] = mensaje4.getBytes();
+ 
+
+            DatagramPacket enviarPaquete4 = new DatagramPacket( datos4,datos4.length,
+                InetAddress.getByName( "192.168.0.12" )/*.getLocalHost()*/, 5000 ); //MODIFICAR CON LA IP DEL SERVIDOR
+            cliente.send( enviarPaquete4 );
+            System.out.printf("\nPaquete enviado\n" );
+            //pantallacliente.setCaretPosition(pantallacliente.getText().length() )  
+
+        }
+        catch ( IOException errorio )
+        {
+            System.out.printf( errorio.toString() + "\n" );
+        }
+
+        // TODO add your handling code here:
+                                                      
+
     }//GEN-LAST:event_btnReservarTransferActionPerformed
 
     /**
